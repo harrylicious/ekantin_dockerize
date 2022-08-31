@@ -90,7 +90,7 @@
                         return meta.row + meta.settings._iDisplayStart + 1;
                     }  
                 },
-                { "data": "tgl_top_up" },  // Tampilkan tgl belanja
+                { "data": "tgl_top_up_convert" },  // Tampilkan tgl belanja
                 { "data": "jam_top_up" },  // Tampilkan jam belanja
                 { "data": "kode" },  // Tampilkan kode siswa
                 { "data": "nama_siswa" },  // Tampilkan nama siswa

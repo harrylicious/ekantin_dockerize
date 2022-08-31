@@ -124,7 +124,7 @@
                         return meta.row + meta.settings._iDisplayStart + 1;
                     }  
                 },
-                { "data": "tgl_belanja" },  // Tampilkan tgl belanja
+                { "data": "tgl_belanja_convert" },  // Tampilkan tgl belanja
                 { "data": "jam_belanja" },  // Tampilkan jam belanja
                 { "data": "kode" },  // Tampilkan kode
                 { "data": "nama_siswa" },  // Tampilkan nama siswa

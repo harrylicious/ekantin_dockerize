@@ -26,6 +26,15 @@ class Siswa extends CI_Controller
         $this->template->load('template', 'v_daftar_siswa', $data);
     }
 
+    function get_all_data()
+    {
+        $search = array('id', 'kode', 'jenis_pendaftar', 'nama_lengkap', 'jenis_kelamin', 'alamat', 'tempat_lahir', 'tanggal_lahir', 'saldo');
+
+        $isWhere = null;
+        header('Content-Type: application/json');  
+        echo $this->m_siswa->get_tables("view_data_siswa", $search,$isWhere);  
+    }
+
     public function import()
     {
         $this->template->load('template', 'v_import_siswa');

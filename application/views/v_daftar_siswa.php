@@ -13,7 +13,7 @@
 				</div>
 				<?php } ?>
 
-
+ 
 				<!-- Page-body start -->
 				<div class="page-body">
 					<div class="row">
@@ -25,84 +25,30 @@
 									<span>Daftar siswa yang sudah melakukan registrasi pembuatan kartu.</span>
 								</div>
 								<div class="card-block">
-									<div class="dt-responsive table-responsive">
-                                        <table id="cbtn-selectors" class="table table-striped table-bordered nowrap">
-											<thead>
-												<tr>
-													<th>No.</th>
-													<th>Tgl. Daftar</th>
-													<th>Photo</th>
-													<th>No. Kartu</th>
-													<th>Jenis Pendaftar</th>
-													<th>Nama Lengkap</th>
-													<th>Jenis Kelamin</th>
-													<th>Alamat</th>
-													<th>Nama Ayah</th>
-													<th>Nama Ibu</th>
-													<th>Saldo Saat Ini</th>
-													<th>* Saldo</th>
-													<th>Aksi</th>
-												</tr>
-											</thead>
-											<tbody>
-												<?php
-												$no = 1;
-												foreach ($data_siswa as $data) {
-													$hari = tgl_dan_hari(substr($data->created_at, 0, 11));
-													if ($data->photo == "" || $data->photo == "-") {
-														$path_photo = "no_image.png";
-													}
-													else {
-														$path_photo = $data->photo;
-													}
-													?>
-												<tr>
-													<td><?= $no++; ?></td>
-													<td><?= $hari.", ".tgl_default(substr($data->created_at, 0, 11)); ?></td>
-													<td><img src="<?= base_url('uploads/'.$path_photo); ?>" alt="<?= $path_photo; ?>" width="60px"></td>
-													<td><strong><?= $data->kode; ?></strong></td>
-													<td><?= $data->jenis_pendaftar; ?></td>
-													<td><?= $data->nama_lengkap; ?></td>
-													<td><?php if ($data->jenis_kelamin == "L") { echo "Laki-laki"; } else { echo "Perempuan"; }; ?></td>
-													<td><?= $data->alamat; ?></td>
-													<td><?= $data->nama_ayah; ?></td>
-													<td><?= $data->nama_ibu; ?></td>
-													<td><strong><?= rupiah($data->saldo); ?></strong></td>
-													<td><strong><?= $data->saldo; ?></strong></td>
-													<td><a class="btn btn-inverse btn-round text-white f-12"
-															href="<?= base_url('siswa/barcode_print/'.$data->id); ?>"><i class="feather icon-file"></i> Cetak Kartu</a>
-            											<?php if ($this->session->userdata('level') == "SUPERADMIN") { ?>
-															<a class="btn btn-success btn-round text-white f-12"
-															href="<?= base_url('siswa/edit/'.$data->id); ?>"><i class="feather icon-edit-2"></i> Edit</a> <?php } ?>
-														<button class="btn btn-danger btn-round text-white f-12" onclick="ConfirmDialog(<?= $data->id; ?>)">
-														<i class="feather icon-trash"></i> Hapus</button>
-													</td>
-												</tr>
-												<?php
-                                                                    }
+								<div class="dt-responsive table-responsive">
 
-                                                                    ?>
-											</tbody>
-											<tfoot>
-												<tr>
-													<th>No.</th>
-													<th>Tgl. Daftar</th>
-													<th>No. Kartu</th>
-													<th>Photo</th>
-													<th>No. Kartu</th>
-													<th>Jenis Pendaftar</th>
-													<th>Nama Lengkap</th>
-													<th>Jenis Kelamin</th>
-													<th>Alamat</th>
-													<th>Nama Ayah</th>
-													<th>Nama Ibu</th>
-													<th>Saldo Saat Ini</th>
-													<th>* Saldo</th>
-													<th>Aksi</th>
-												</tr>
-											</tfoot>
-										</table>
-									</div>
+									
+									<table id="table1" class="table table-striped table-bordered nowrap">
+										<thead>
+											<tr>
+												<th>No.</th>
+												<th>Kode</th>
+												<th>Tgl. Daftar</th>
+												<th>Jenis Pendaftar</th>
+												<th>Nama Lengkap</th>
+												<th>Jenis Kelamin</th>
+												<th>Alamat</th>
+												<th>Tempat Lahir</th>
+												<th>Tanggal Lahir</th>
+												<th>Saldo</th>
+												<th>Aksi</th>
+											</tr>
+										</thead>
+										<tbody>
+
+										</tbody>
+									</table>
+								</div>
 								</div>
 							</div>
 							<!-- HTML5 Export Buttons end -->
@@ -166,4 +112,63 @@ $(document).ready(function() {
         ]
     } );
 } );
+</script>
+
+
+<script type="text/javascript" src="<?= base_url(); ?>bower_components\jquery\js\jquery.min.js"></script>
+
+<script type="text/javascript">
+	var url="<?php echo base_url();?>";
+    function ConfirmDialog(id) {
+		var x=confirm("Are you sure to delete record?")
+		if (x) {
+          	window.location = url + "topup/delete/" + id;
+		} else {
+			return false;
+		}
+	}
+
+</script>
+<script>
+    var tabel = null;
+    $(document).ready(function() {
+        tabel = $('#table1').DataTable({ 
+            "processing": true,
+            "language": {
+              processing: '<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i><span class="sr-only">Loading...</span> '},
+            "responsive":true,
+            "serverSide": true,
+            "ordering": true, // Set true agar bisa di sorting
+            "order": [[ 0, 'desc' ]], // Default sortingnya berdasarkan kolom / field ke 0 (paling pertama)
+            "ajax":
+            {
+                "url": "<?= base_url('siswa/get_all_data');?>", // URL file untuk proses select datanya
+                "type": "POST"
+            },
+            "deferRender": true,
+            "aLengthMenu": [[10, 50, 100],[10, 50, 100]], // Combobox Limit
+            "columns": [
+                {"data": 'kode',"sortable": true, 
+                    render: function (data, type, row, meta) {
+                        return meta.row + meta.settings._iDisplayStart + 1;
+                    }  
+                },
+                { "data": "kode" },  
+                { "data": "tgl_daftar" },  
+                { "data": "jenis_pendaftar" },  
+                { "data": "nama_lengkap" }, 
+                { "data": "jenis_kelamin" },  
+                { "data": "alamat" },  
+                { "data": "tempat_lahir" }, 
+                { "data": "tanggal_lahir" },  
+                { "data": "saldo" },  
+                { "data": "id", 
+                    "render": 
+                    function( data, type, row, meta ) {
+                        return '<a class="btn btn-success" href="<?= base_url('siswa/barcode_print/'); ?>'+data+'"><i class="feather icon-eye"></i> Lihat Kartu</a>';
+                    }
+                },
+            ],
+        });
+    });
 </script>
